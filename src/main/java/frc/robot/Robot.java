@@ -9,12 +9,17 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.invoke.VarHandle.VarHandleDesc;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
+import edu.wpi.first.networktables.IntegerSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringSubscriber;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -30,6 +35,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends TimedRobot {
+
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  
+  NetworkTable table = inst.getTable("test");
+
+  NetworkTable pieces = inst.getTable("Vision");
+
   private final PWMSparkMax m_leftDrive = new PWMSparkMax(0);
   private final PWMSparkMax m_rightDrive = new PWMSparkMax(1);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftDrive, m_rightDrive);
@@ -41,6 +53,12 @@ public class Robot extends TimedRobot {
   File file = new File( "angle.txt" );
 
   PhotonCamera camera = new PhotonCamera( "Microsoft_LifeCam_HD-3000" );
+
+  //StringSubscriber name = pieces.getStringTopic("piece").subscribe("Nothing");
+  IntegerSubscriber ymin = pieces.getIntegerTopic("yMin").subscribe(0);
+  IntegerSubscriber xmin = pieces.getIntegerTopic("xMin").subscribe(0);
+  IntegerSubscriber ymax = pieces.getIntegerTopic("yMax").subscribe(0);
+  IntegerSubscriber xmax = pieces.getIntegerTopic("xMax").subscribe(0);
 
 
   /**
@@ -90,6 +108,15 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() 
   {
 
+    //String name = table.getEntry("Test").getString("Fail")
+
+    //String piece = name.get();
+    long yMin = ymin.get(); 
+    long xMin = xmin.get(); 
+    long yMax = ymax.get(); 
+    long xMax = xmax.get(); 
+    
+
     long timeNow = System.currentTimeMillis();
     m_robotDrive.arcadeDrive(-m_controller.getLeftY(), -m_controller.getRightX());
 
@@ -131,13 +158,21 @@ public class Robot extends TimedRobot {
       System.out.println( "localY: " + location.localizePos( id , x, y )[1] ); 
       System.out.println( "localAngle: "  + Math.toDegrees( location.localizeAngle( id, rot ) ) );
       System.out.println( "ambiguity: " + ambiguity ); 
-       System.out.println( "certainty: " + certainty ); 
+      System.out.println( "certainty: " + certainty ); 
+
+      //System.out.println("piece:1 " + piece);
+      System.out.println("ymin:2 " + yMin);
+      System.out.println("xmin:3 " + xMin);
+      System.out.println("ymax:4 " + yMax);
+      System.out.println("xmax:5 " + xMax);
 
       
 
       lt = System.currentTimeMillis();
 
       }
+
+      //System.out.println(name);
 
     }
 

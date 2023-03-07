@@ -73,7 +73,8 @@ public class Localizer{
      */
     public double[] localizePos()
     {
-        
+        runDetection();
+
         double localX;
         double localY;
         
@@ -107,7 +108,8 @@ public class Localizer{
     */
     public double localizeAngle()
     {
-        
+        runDetection();
+    
         rot = ( -rot + 360 ) % 360; 
 
         if( id == -1 )

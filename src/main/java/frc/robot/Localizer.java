@@ -27,6 +27,9 @@ public class Localizer{
     final double[][] APRIL_TAG_LOCATIONS = new double[][]{ { 15.51, 1.07 }, { 15.51, 2.75 }, { 15.51, 4.42 },
     { 16.18, 6.75 }, { .36, 6.75 }, { 1.03, 4.42 }, { 1.03, 2.75 }, { 1.03, 1.07 } };
     
+    /**
+     * 
+     */
     public void runDetection()
     {
         PhotonPipelineResult result = camera.getLatestResult(); 
@@ -151,5 +154,25 @@ public class Localizer{
     public double getAngle()
     {
         return fieldAngle; 
+    }
+
+    /**
+     * Gets the x distance from a detected Apriltag
+     * 
+     * @return x the x distance that the robot is from a detected Apriltag
+     */
+    public double getXPosFromTarget()
+    {
+        return x;
+    }
+
+    /**
+     * Gets the y distance from a detected Apriltag
+     * 
+     * @return y the y distance that the robot is from a detected Apriltag
+     */
+    public double getYPosFromTarget()
+    {
+        return y; 
     }
 }

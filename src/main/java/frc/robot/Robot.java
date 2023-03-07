@@ -121,8 +121,7 @@ public class Robot extends TimedRobot {
     m_robotDrive.arcadeDrive(-m_controller.getLeftY(), -m_controller.getRightX());
 
     var result = camera.getLatestResult(); 
-
-    if( result.hasTargets() )
+if( result.hasTargets() )
     {
       var target = result.getBestTarget();
 
@@ -133,7 +132,8 @@ public class Robot extends TimedRobot {
       var y = target.getBestCameraToTarget().getY();
       var rot = target.getBestCameraToTarget().getRotation().toRotation2d().getDegrees(); 
 
-      var theta = target.getBestCameraToTarget().getRotation().getAngle(); 
+      var theta = target
+    .getBestCameraToTarget().getRotation().getAngle(); 
       var ambiguity = target.getPoseAmbiguity(); 
       double time = timeNow - location.getTimeAtDetection() / 1000;
       double certainty = location.getConfidence( ambiguity, x, y, time ); 
@@ -154,9 +154,9 @@ public class Robot extends TimedRobot {
 
       System.out.println( "theta: " + Math.toDegrees( Math.atan2( y, x ) ) ); 
 
-      System.out.println( "localX: " + location.localizePos( id , x, y )[0] );
-      System.out.println( "localY: " + location.localizePos( id , x, y )[1] ); 
-      System.out.println( "localAngle: "  + Math.toDegrees( location.localizeAngle( id, rot ) ) );
+      // System.out.println( "localX: " + location.localizePos( id , x, y )[0] );
+      // System.out.println( "localY: " + location.localizePos( id , x, y )[1] ); 
+      // System.out.println( "localAngle: "  + Math.toDegrees( location.localizeAngle( id, rot ) ) );
       System.out.println( "ambiguity: " + ambiguity ); 
       System.out.println( "certainty: " + certainty ); 
 

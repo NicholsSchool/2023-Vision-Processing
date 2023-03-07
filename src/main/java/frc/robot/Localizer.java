@@ -1,5 +1,9 @@
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 /*
 * Localizer localizes our robots position and angle on the field relative to ( 0, 0 ) bottom left
 * for position and ( 0, 0 ) for angle relative to center of field with the red alliance station being 
@@ -8,16 +12,37 @@ package frc.robot;
 */
 public class Localizer{
     
+    PhotonCamera camera = new PhotonCamera( "Microsoft_LifeCam_HD-3000" );
+
     
     double[] location = new double[]{ 0.0, 0.0 }; 
     double fieldAngle = 0; 
     long timeDetected = 0; 
-     
+    int id; 
+    double x, y, rot;
+
+    PhotonPipelineResult result = camera.getLatestResult(); 
+
 
     final double[][] APRIL_TAG_LOCATIONS = new double[][]{ { 15.51, 1.07 }, { 15.51, 2.75 }, { 15.51, 4.42 },
     { 16.18, 6.75 }, { .36, 6.75 }, { 1.03, 4.42 }, { 1.03, 2.75 }, { 1.03, 1.07 } };
     
-    
+    public void runDetection()
+    {
+        PhotonPipelineResult result = camera.getLatestResult(); 
+
+        if( result.hasTargets() )
+        {
+            PhotonTrackedTarget target = result.getBestTarget();
+
+            id = target.getFiducialId();
+            
+            x = target.getBestCameraToTarget().getX();
+            y = target.getBestCameraToTarget().getY();
+            rot = target.getBestCameraToTarget().getRotation().toRotation2d().getDegrees();
+        }
+           
+    }
     
     /**
      * Returns a confidence from 0 --> 1 based on how accurate we believe our position and angle are
@@ -46,8 +71,9 @@ public class Localizer{
     /**
      * Localize your position on the field relative to (0, 0) located in the bottom left of the field
      */
-    public double[] localizePos( int id, double x, double y )
+    public double[] localizePos()
     {
+        
         double localX;
         double localY;
         
@@ -79,22 +105,22 @@ public class Localizer{
     * at the red alliance station and 180 degrees at the blue alliance station. This
     * angle is measured in radians.  
     */
-    public double localizeAngle( int id, double angle )
+    public double localizeAngle()
     {
         
-        angle = ( -angle + 360 ) % 360; 
+        rot = ( -rot + 360 ) % 360; 
 
         if( id == -1 )
         {
-            return angle;
+            return rot;
         }
         else if( id <= 4 )
         {
-            fieldAngle = ( angle + 180 ) % 360;
+            fieldAngle = ( rot + 180 ) % 360;
         }
         else
         {
-            fieldAngle = angle; 
+            fieldAngle = rot; 
         }
      
        return Math.toRadians( fieldAngle ); 
